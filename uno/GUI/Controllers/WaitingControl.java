@@ -69,6 +69,7 @@ public class WaitingControl implements ActionListener
     // After the host starts game, well, start the game.
     public void gameStarted()
     {
+        gc.initializeTurn();
         GamePanel gamePanel = new GamePanel(this.gc, client.getPlayer());
         gamePanel.setGame(gamePanel.getGame());
 

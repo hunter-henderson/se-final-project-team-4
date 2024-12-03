@@ -30,6 +30,9 @@ public class GameGUI extends JFrame
 	      e.printStackTrace();
 	    }
 
+	    String strLine;
+	    ArrayList<String> lines = new ArrayList<String>();
+
 	    try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream)))
 	    {
 	      String fileContents;

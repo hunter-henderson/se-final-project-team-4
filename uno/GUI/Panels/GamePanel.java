@@ -29,12 +29,16 @@ public class GamePanel extends JPanel
     this.game = gc.getGame();
     this.player = player;
 
+    String clientPlayerName = player.getName();
     for (Player checkplayer : game.getPlayers())
     {
-        if (checkplayer.getId() == player.getId());
-        {
-            this.player = checkplayer;
-        }
+      String compareName = checkplayer.getName();
+
+      if (compareName.equals(clientPlayerName))
+      {
+          this.player = checkplayer;
+          break;
+      }
     }
 
     this.setLayout(new BorderLayout());
@@ -150,6 +154,18 @@ public class GamePanel extends JPanel
     //----------------------------------------------------------------------------------------------------------------
     JPanel cards = new JPanel();
     cards.setLayout(new BoxLayout(cards, BoxLayout.Y_AXIS));
+
+    JLabel isYourTurn = new JLabel("");
+    isYourTurn.setAlignmentX(Component.CENTER_ALIGNMENT);
+    if (this.player.isTurn())
+    {
+      isYourTurn.setText("It's your turn! Play a card.");
+    }
+    else
+    {
+      isYourTurn.setText("It's not your turn! Please wait.");
+    }
+    cards.add(isYourTurn);
 
     JPanel cardsPanel = new JPanel(); // Panel to hold the card components
     cardsPanel.setLayout(new GridBagLayout());

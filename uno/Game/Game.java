@@ -394,10 +394,17 @@ public class Game implements Serializable
         System.out.println("Congratulations! Player " + playerlist.get(currentPlayerIndex).getName() + " has won.\n");
     }
 
-    public void cardPlayed(Card card)
+    public void cardPlayed(Card cardplayed)
     {
+        String image = cardplayed.getImage();
+        String color = cardplayed.getColor();
+        int value = cardplayed.getValue();
+        String action = cardplayed.getAction();
+
+        Card card = new Card(image, color, value, action);
+
         //Player plays a standard number card
-        if (card.getAction() == "Number")
+        if (action.equals("Number"))
         {
             //Remove the card from the player's hand.
             System.out.println("Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print());
@@ -409,7 +416,7 @@ public class Game implements Serializable
         }
 
         //Player plays a skip card
-        else if (card.getAction() == "Skip") {
+        else if (action.equals("Skip")) {
             //Remove the card from the player's hand.
             System.out.println("Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print());
 
@@ -424,7 +431,7 @@ public class Game implements Serializable
         }
 
         //Player plays a reverse card
-        else if (card.getAction() == "Reverse") {
+        else if (action.equals("Reverse")) {
             //Remove the card from the player's hand.
             System.out.println("Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print());
 
@@ -454,7 +461,7 @@ public class Game implements Serializable
         }
 
         //Player plays a draw 2 card
-        else if (card.getAction() == "Draw2") {
+        else if (action.equals("Draw2")) {
             //Remove the card from the player's hand.
             System.out.println("Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print());
 
@@ -555,7 +562,6 @@ public class Game implements Serializable
 
         //This code just uses a modulo to keep all incrementations of index within the valid player list.
         currentPlayerIndex = (currentPlayerIndex + playerIndexIncrement) % playerlist.size();
-        getPlayers().get(currentPlayerIndex).setTurn(true);
 
         if (playerlist.get(currentPlayerIndex).isSkip())
         {
@@ -565,11 +571,24 @@ public class Game implements Serializable
 
             advanceTurn();
         }
+
+        for (Player player : playerlist)
+        {
+            if(player.getId() == currentPlayerIndex)
+            {
+                player.setTurn(true);
+            }
+            else
+            {
+                player.setTurn(false);
+            }
+        }
     }
 
     public void startRound()
     {
         //For each player, draw their initial hand (7 cards).
+        int id = 0;
         for (Player player : playerlist)
         {
             dealNewHand = new Hand();
@@ -579,6 +598,8 @@ public class Game implements Serializable
             }
 
             player.setHand(dealNewHand);
+            player.setId(id);
+            id++;
         }
 
         //The game begins with the top card of the deck being placed face up in the discard pile.

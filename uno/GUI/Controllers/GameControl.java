@@ -62,6 +62,7 @@ public class GameControl implements ActionListener
             if (compareName.equals(clientPlayerName))
             {
                 client.getPlayer().setId(player.getId());
+                break;
             }
         }
     }
@@ -77,7 +78,7 @@ public class GameControl implements ActionListener
         if (command.contains("PlayCard:"))
         {
             if (isYourTurn) {
-                String playedCardId = command.substring("PlayCard:".length());
+                String playedCardId = command.split(":")[1];
 
                 if (game.getPlayers().get(game.getCurrentPlayerIndex()).getHand().getCardAt(Integer.parseInt(playedCardId)).isPlayable(game.getDiscardDeck().getTopCard())) {
                     try {
@@ -108,13 +109,7 @@ public class GameControl implements ActionListener
     // After a play, update the game screen.
     public void gameUpdate()
     {
-        for (Player player : game.getPlayers())
-        {
-            if (player.getId() == client.getPlayer().getId())
-            {
-                isYourTurn = player.isTurn();
-            }
-        }
+        initializeTurn();
 
         container.remove(6);
         container.add(new GamePanel(this, client.getPlayer()), "Game");
@@ -132,5 +127,20 @@ public class GameControl implements ActionListener
 
         CardLayout cardLayout = (CardLayout) container.getLayout();
         cardLayout.show(container, "GameOver");
+    }
+
+    public void initializeTurn()
+    {
+        String clientPlayerName = client.getPlayer().getName();
+        for (Player checkplayer : game.getPlayers())
+        {
+            String compareName = checkplayer.getName();
+
+            if (compareName.equals(clientPlayerName))
+            {
+                isYourTurn = checkplayer.isTurn();
+                break;
+            }
+        }
     }
 }

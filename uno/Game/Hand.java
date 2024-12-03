@@ -18,8 +18,15 @@ public class Hand implements Serializable
         this.cards.add(card);
     }
 
-    public void removeCard(Card card)
+    public void removeCard(Card cardplayed)
     {
+        String image = cardplayed.getImage();
+        String color = cardplayed.getColor();
+        int value = cardplayed.getValue();
+        String action = cardplayed.getAction();
+
+        Card card = new Card(image, color, value, action);
+
         this.cards.remove(card);
     }
 
