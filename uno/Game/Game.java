@@ -402,6 +402,7 @@ public class Game implements Serializable
         String action = cardplayed.getAction();
 
         Card card = new Card(image, color, value, action);
+        String update = "";
 
         //Player plays a standard number card
         if (action.equals("Number"))
@@ -409,16 +410,21 @@ public class Game implements Serializable
             //Remove the card from the player's hand.
             System.out.println("Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print());
 
+
             playerlist.get(currentPlayerIndex).getHand().removeCard(card);
 
             //Add it to the discard pile.
             discardDeck.addToDeck(card);
+
+            update = "Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print();
+            //return update;
         }
 
         //Player plays a skip card
         else if (action.equals("Skip")) {
             //Remove the card from the player's hand.
             System.out.println("Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print());
+
 
             playerlist.get(currentPlayerIndex).getHand().removeCard(card);
 
@@ -428,6 +434,9 @@ public class Game implements Serializable
             nextPlayer = (currentPlayerIndex + playerIndexIncrement) % playerlist.size();
             playerlist.get(nextPlayer).setSkip(true);
             System.out.println("Player " + playerlist.get(nextPlayer).getName() + " must skip their turn!\n");
+
+            update = "Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print() + ", Player " + playerlist.get(nextPlayer).getName() + " must skip their turn!\n";
+            //return update;
         }
 
         //Player plays a reverse card
@@ -446,6 +455,9 @@ public class Game implements Serializable
                 playerlist.get(nextPlayer).setSkip(true);
 
                 System.out.println("Player " + playerlist.get(nextPlayer).getName() + " must skip their turn!\n");
+
+                update = "Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print() + ", Player " + playerlist.get(nextPlayer).getName() + " must skip their turn!\n";
+                //return update;
             }
 
             //Otherwise change turn order
@@ -453,9 +465,15 @@ public class Game implements Serializable
                 if (turnOrder.equals("Standard")) {
                     System.out.println("The turn order is now reversed.");
                     turnOrder = "Reverse";
+
+                    update = "Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print() + ", The turn order is now reversed.\n";
+                    //return update;
                 } else if (turnOrder.equals("Reverse")) {
                     System.out.println("The turn order is now standard.");
                     turnOrder = "Standard";
+
+                    update = "Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print() + ", The turn order is now standard.\n";
+                    //return update;
                 }
             }
         }
@@ -476,11 +494,17 @@ public class Game implements Serializable
             draw(playerlist.get(nextPlayer));
             draw(playerlist.get(nextPlayer));
 
+            update = "Player " + playerlist.get(currentPlayerIndex).getName() + " plays " + card.print();
+            //return update;
         }
+
+        //return update;
     }
 
     public void draw(Player player)
     {
+        String update = "";
+
         if (mainDeck.isEmpty())
         {
             int totalDiscard = discardDeck.cardCount();
@@ -494,12 +518,19 @@ public class Game implements Serializable
             discardDeck.addToDeck(mainDeck.draw());
             System.out.println("Decks reshuffled.");
 
+            update = "Decks reshuffled.";
+            //return update;
+
         }
         else
         {
             System.out.println(player.getName() + " draws a card.");
             player.getHand().addCard(mainDeck.draw());
+
+            update = player.getName() + " draws a card.";
+            //return update;
         }
+        //return update;
     }
 
     public boolean winConditionMet()
@@ -507,10 +538,6 @@ public class Game implements Serializable
         //--------------------------------------------------------------
         //Check win conditions to see if they are met after the play.
         //--------------------------------------------------------------
-
-        if (playerlist.get(currentPlayerIndex).getHand().cardCount() == 1) {
-            System.out.println("Player " + playerlist.get(currentPlayerIndex).getName() + " calls UNO!\n");
-        }
 
         //If player has emptied their hand,
         if (playerlist.get(currentPlayerIndex).getHand().cardCount() == 0) {
@@ -546,6 +573,18 @@ public class Game implements Serializable
         }
 
         return false;
+    }
+
+    public void uno()
+    {
+        String update = "";
+        if (playerlist.get(currentPlayerIndex).getHand().cardCount() == 1)
+        {
+            System.out.println("Player " + playerlist.get(currentPlayerIndex).getName() + " calls UNO!\n");
+            update = "Player " + playerlist.get(currentPlayerIndex).getName() + " calls UNO!\n";
+        }
+
+        //return update;
     }
 
     public void advanceTurn()

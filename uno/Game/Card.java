@@ -1,6 +1,7 @@
 package uno.Game;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Card implements Serializable
 {
@@ -39,7 +40,10 @@ public class Card implements Serializable
 
     public boolean isPlayable(Card faceUp)
     {
-        if(((this.getValue() == faceUp.getValue()) && this.getAction() == "Number") || this.getColor() == faceUp.getColor() || ((this.getAction() == faceUp.getAction()) && this.getValue() > 9))
+        // Use equals() for string comparison
+        if(((this.getValue() == faceUp.getValue()) && this.getAction().equals("Number"))
+                || this.getColor().equals(faceUp.getColor())
+                || ((this.getAction().equals(faceUp.getAction())) && this.getValue() > 9))
         {
             return true;
         }
@@ -71,5 +75,21 @@ public class Card implements Serializable
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Card card = (Card) obj;
+        return value == card.value &&
+                Objects.equals(image, card.image) &&
+                Objects.equals(color, card.color) &&
+                Objects.equals(action, card.action);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(image, color, value, action);
     }
 }

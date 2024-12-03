@@ -108,6 +108,9 @@ public class GameServer extends AbstractServer
     {
       game.cardPlayed((Card)arg0);
 
+      //sendToAllClients("Gameupdate:" + game.cardPlayed((Card)arg0));
+      //sendToAllClients("Gameupdate:" + game.uno());
+
       boolean gameOver = game.winConditionMet();
       if (gameOver)
       {

@@ -48,7 +48,7 @@ public class GamePanel extends JPanel
     JLabel playerTurn = new JLabel("Player " + game.getPlayers().get(game.getCurrentPlayerIndex()).getName() + "'s Turn");
     JLabel playerName = new JLabel(this.player.getName() + "'s Hand");
     playerName.setFont(new Font("Arial", Font.BOLD, 20));
-    JLabel playerScore = new JLabel("Score: " + game.getPlayers().get(game.getCurrentPlayerIndex()).getScore());
+    JLabel playerScore = new JLabel("Score: " + this.player.getScore());
     JPanel infoPanel = new JPanel();
     infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 

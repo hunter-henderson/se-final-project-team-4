@@ -66,10 +66,14 @@ public class GameClient extends AbstractClient
       }
 
       // DEBUG
-      else if (message.equals("TestMessage"))
+      else if (message.contains("Gameupdate:"))
       {
-        System.out.println("Test Message received for " + player.getName());
+        message = message.split(":")[1];
+
+        log.append(message);
       }
+
+
     }
 
     //If we've received a game object, that means a turn has been made and game info has been updated.
