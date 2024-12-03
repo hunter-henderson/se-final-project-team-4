@@ -583,16 +583,7 @@ public class Game implements Serializable
 
         //The game begins with the top card of the deck being placed face up in the discard pile.
         discardDeck.addToDeck(mainDeck.draw());
-    }
-
-    public static void main(String[] args)
-    {
-        Game test = new Game();
-        Player[] players = new Player[2];
-        players[0] = new Player("Caiden", 1);
-        players[1] = new Player("Test", 1);
-
-        test.play(players);
+        getPlayers().get(currentPlayerIndex).setTurn(true);
     }
 
     public void setWinGoal(int winGoal) {

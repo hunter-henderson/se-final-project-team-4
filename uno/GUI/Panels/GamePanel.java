@@ -4,6 +4,7 @@ import uno.GUI.Controllers.GameControl;
 import uno.Game.Deck;
 import uno.Game.Game;
 import uno.Game.Hand;
+import uno.Game.Player;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -18,25 +19,40 @@ public class GamePanel extends JPanel
   private List<CardPanel> cardPanels;
   private JTextArea gameLog;
   private Game game;
+  private Player player;
+
 
   // Constructor for the main menu.
-  public GamePanel(GameControl gc)
+  public GamePanel(GameControl gc, Player player)
   {
     cardPanels = new ArrayList<CardPanel>();
     this.game = gc.getGame();
+    this.player = player;
+
+    for (Player checkplayer : game.getPlayers())
+    {
+        if (checkplayer.getId() == player.getId());
+        {
+            this.player = checkplayer;
+        }
+    }
 
     this.setLayout(new BorderLayout());
     //----------------------------------------------------------------------------------------------------------------
     // Display player information (Name, Score)
     //----------------------------------------------------------------------------------------------------------------
-    JLabel playerName = new JLabel("Player " + game.getPlayers().get(game.getCurrentPlayerIndex()).getName() + "'s Turn");
+    JLabel playerTurn = new JLabel("Player " + game.getPlayers().get(game.getCurrentPlayerIndex()).getName() + "'s Turn");
+    JLabel playerName = new JLabel(this.player.getName() + "'s Hand");
+    playerName.setFont(new Font("Arial", Font.BOLD, 20));
     JLabel playerScore = new JLabel("Score: " + game.getPlayers().get(game.getCurrentPlayerIndex()).getScore());
     JPanel infoPanel = new JPanel();
     infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 
+    infoPanel.add(playerTurn);
     infoPanel.add(playerName);
     infoPanel.add(playerScore);
 
+    playerTurn.setAlignmentX(Component.CENTER_ALIGNMENT);
     playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
     playerScore.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -160,12 +176,12 @@ public class GamePanel extends JPanel
     //----------------------------------------------------------------------------------------------------------------
     //Add cards to card panel.
     //----------------------------------------------------------------------------------------------------------------
-    for (int i = 0; i < game.getPlayers().get(game.getCurrentPlayerIndex()).getHand().cardCount(); i++)
+    for (int i = 0; i < this.player.getHand().cardCount(); i++)
     {
-      cardPanels.add(new CardPanel(game.getPlayers().get(game.getCurrentPlayerIndex()).getHand().getCardAt(i), gc, i));
+      cardPanels.add(new CardPanel(this.player.getHand().getCardAt(i), gc, i));
     }
 
-    for (int i = 0; i < game.getPlayers().get(game.getCurrentPlayerIndex()).getHand().cardCount(); i++)
+    for (int i = 0; i < this.player.getHand().cardCount(); i++)
     {
       cardsPanel.add(cardPanels.get(i));
       cardPanels.get(i).setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -214,20 +230,24 @@ public class GamePanel extends JPanel
   {
     this.gameLog = gameLog;
   }
-
   public JTextArea getGameLog()
   {
     return gameLog;
   }
-
   public Game getGame()
   {
     return game;
   }
-
   public void setGame(Game game)
   {
     this.game = game;
   }
-
+  public Player getPlayer()
+  {
+    return player;
+  }
+  public void setPlayer(Player player)
+  {
+    this.player = player;
+  }
 }

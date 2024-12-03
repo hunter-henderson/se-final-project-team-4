@@ -6,11 +6,10 @@ import uno.GUI.Panels.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -19,52 +18,49 @@ public class GameGUI extends JFrame
   // Constructor that creates the client GUI.
   public GameGUI()
   {
-    String ip = "localhost";
-    int port = 8300;
+	  String ip = "localhost";
+	    int port = 8300;
 
-    // Receive the IP address and port from the config.txt file
-    // The first argument is the IP address and the second is the port, with the space being delimiters.
-    FileInputStream stream = null;
-    try {
-      stream = new FileInputStream("config.txt");
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
+	    // Receive the IP address and port from the config.txt file
+	    // The first argument is the IP address and the second is the port, with the space being delimiters.
+	    FileInputStream stream = null;
+	    try {
+	      stream = new FileInputStream("config.txt");
+	    } catch (FileNotFoundException e) {
+	      e.printStackTrace();
+	    }
 
-    String strLine;
-    ArrayList<String> lines = new ArrayList<String>();
+	    try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream)))
+	    {
+	      String fileContents;
 
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream)))
-    {
-      String fileContents;
+	      // Read each line from the file
+	      while ((fileContents = reader.readLine()) != null) {
+	        // Split the line by space
+	        String[] parts = fileContents.split(" ");
 
-      // Read each line from the file
-      while ((fileContents = reader.readLine()) != null) {
-        // Split the line by space
-        String[] parts = fileContents.split(" ");
+	        // Ensure there are two parts (IP and port)
+	        if (parts.length == 2) {
+	          ip = parts[0];
+	          port = Integer.parseInt(parts[1]);
 
-        // Ensure there are two parts (IP and port)
-        if (parts.length == 2) {
-          ip = parts[0];
-          port = Integer.parseInt(parts[1]);
+	          // Process the IP and port
+	          System.out.println("IP Address: " + ip);
+	          System.out.println("Port: " + port);
+	        } else {
+	          System.out.println("Invalid line format: " + fileContents);
+	        }
+	      }
+	    } catch (FileNotFoundException e) {
+	      System.err.println("File not found: " + stream);
+	    } catch (IOException e) {
+	      System.err.println("Error reading file: " + e.getMessage());
+	    }
 
-          // Process the IP and port
-          System.out.println("IP Address: " + ip);
-          System.out.println("Port: " + port);
-        } else {
-          System.out.println("Invalid line format: " + fileContents);
-        }
-      }
-    } catch (FileNotFoundException e) {
-      System.err.println("File not found: " + stream);
-    } catch (IOException e) {
-      System.err.println("Error reading file: " + e.getMessage());
-    }
-
-    // Set up the chat client.
-    GameClient client = new GameClient();
-    client.setHost(ip);
-    client.setPort(port);
+	    // Set up the chat client.
+	    GameClient client = new GameClient();
+	    client.setHost(ip);
+	    client.setPort(port);
 
     // Set the title and default close operation.
     this.setTitle("UNO!");
@@ -79,15 +75,18 @@ public class GameGUI extends JFrame
     LoginControl lc = new LoginControl(container,client);
     CreateAccountControl cac = new CreateAccountControl(container,client);
     MainMenuControl mmc = new MainMenuControl(container,client);
-    WaitingControl wc = new WaitingControl(container,client);
-    GameOverControl goc = new GameOverControl(container,client);
     GameControl gc = new GameControl(container,client);
+    WaitingControl wc = new WaitingControl(container,client,gc);
+    GameOverControl goc = new GameOverControl(container,client);
+
 
 
     
     //Set the client info
     client.setLoginControl(lc);
     client.setCreateAccountControl(cac);
+    client.setWaitingControl(wc);
+    client.setGameControl(gc);
    
     
     // Create the four views. (need the controller to register with the Panels
@@ -97,7 +96,7 @@ public class GameGUI extends JFrame
     JPanel view4 = new MainMenuPanel(mmc);
     JPanel view5 = new WaitingPanel(wc);
     JPanel view6 = new GameOverPanel(goc);
-    JPanel view7 = new GamePanel(gc);
+
 
     
     // Add the views to the card layout container.
@@ -107,10 +106,8 @@ public class GameGUI extends JFrame
     container.add(view4, "MainMenu");         //INDEX 3
     container.add(view5, "Waiting");          //INDEX 4
     container.add(view6, "GameOver");         //INDEX 5
-    container.add(view7, "Game");             //INDEX 6
 
-   
-    
+
     // Show the initial view in the card layout.
     cardLayout.show(container, "MainMenu");
     

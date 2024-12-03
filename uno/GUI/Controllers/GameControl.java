@@ -31,15 +31,11 @@ public class GameControl implements ActionListener
         this.game = new Game();
         this.winner = null;
         this.isYourTurn = false;
+    }
 
-        //Default stuff. Get rid of later.
-        Player[] players = new Player[2];
-        players[0] = new Player("Caiden", 1);
-        players[1] = new Player("Test", 1);
-
-        game.setPlayers(List.of(players));
-
-        game.startRound();
+    public void setGameLog(JTextArea gameLog)
+    {
+        client.setLog(gameLog);
     }
 
     public Game getGame()
@@ -54,6 +50,20 @@ public class GameControl implements ActionListener
     public void setWinner(Player winner)
     {
         this.winner = winner;
+    }
+    public void initializePlayer()
+    {
+        String clientPlayerName = client.getPlayer().getName();
+
+        for (Player player : game.getPlayers())
+        {
+            String compareName = player.getName();
+
+            if (compareName.equals(clientPlayerName))
+            {
+                client.getPlayer().setId(player.getId());
+            }
+        }
     }
 
 
@@ -107,7 +117,7 @@ public class GameControl implements ActionListener
         }
 
         container.remove(6);
-        container.add(new GamePanel(this), "Game");
+        container.add(new GamePanel(this, client.getPlayer()), "Game");
         container.repaint();
         container.revalidate();
 

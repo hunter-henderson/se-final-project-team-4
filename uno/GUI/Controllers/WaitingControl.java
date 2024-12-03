@@ -15,12 +15,14 @@ public class WaitingControl implements ActionListener
     // Private data field for storing the container.
     private JPanel container;
     private GameClient client;
+    private GameControl gc;
 
     // Constructor for the initial controller.
-    public WaitingControl(JPanel container, GameClient client)
+    public WaitingControl(JPanel container, GameClient client, GameControl gc)
     {
         this.container = container;
         this.client = client;
+        this.gc = gc;
     }
 
     // Handle button clicks.
@@ -67,7 +69,12 @@ public class WaitingControl implements ActionListener
     // After the host starts game, well, start the game.
     public void gameStarted()
     {
-        GamePanel gamePanel = (GamePanel)container.getComponent(6);
+        GamePanel gamePanel = new GamePanel(this.gc, client.getPlayer());
+        gamePanel.setGame(gamePanel.getGame());
+
+        container.add(gamePanel, "Game");
+        container.repaint();
+        container.revalidate();
 
         CardLayout cardLayout = (CardLayout)container.getLayout();
         cardLayout.show(container, "Game");

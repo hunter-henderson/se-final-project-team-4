@@ -221,6 +221,7 @@ public class GameServer extends AbstractServer
 
       Player player = new Player();
       player.setName(data.getUsername());
+      player.setId((int) arg1.getId());
       game.addPlayer(player);
 
       playerCount.setText(game.getPlayerCount() + "/8");

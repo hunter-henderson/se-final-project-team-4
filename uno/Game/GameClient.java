@@ -6,6 +6,8 @@ import uno.GUI.Controllers.GameControl;
 import uno.GUI.Controllers.LoginControl;
 import uno.GUI.Controllers.WaitingControl;
 
+import javax.swing.*;
+
 public class GameClient extends AbstractClient
 {
   // Private data fields for storing the GUI controllers.
@@ -14,6 +16,7 @@ public class GameClient extends AbstractClient
   private WaitingControl waitingControl;
   private GameControl gameControl;
   private Player player;
+  private JTextArea log;
 
   // Setters for the GUI controllers.
   public void setLoginControl(LoginControl loginControl)
@@ -24,10 +27,18 @@ public class GameClient extends AbstractClient
   public void setWaitingControl(WaitingControl waitingControl) { this.waitingControl = waitingControl; }
   public void setGameControl(GameControl gameControl) { this.gameControl = gameControl; }
 
+  //Log setter.
+  public void setLog(JTextArea log)
+  {
+    this.log = log;
+  }
+
   // Constructor for initializing the client with default settings.
   public GameClient()
   {
     super("localhost", 8300);
+    player = new Player();
+    player.setName("Default");
   }
 
   public void setPlayer(Player player){ this.player = player; }
@@ -82,6 +93,8 @@ public class GameClient extends AbstractClient
     {
         InitialGameData startgame = (InitialGameData) arg0;
         gameControl.setGame(startgame.game);
+        gameControl.initializePlayer();
+
         waitingControl.gameStarted();
     }
 
